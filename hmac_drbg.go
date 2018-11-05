@@ -3,6 +3,7 @@ package crypto
 import (
 	"crypto/hmac"
 	"crypto/sha256"
+	"errors"
 )
 
 // HmacDRBG ...
@@ -13,6 +14,7 @@ type HmacDRBG struct {
 }
 
 var (
+	reseedInterval = 10000
 	// Key = 0x00 00...00
 	initK = []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
 	// V = 0x01 01...01
@@ -50,6 +52,10 @@ func (h *HmacDRBG) Reseed(entropy []byte, input []byte) error {
 
 // Generate ...
 func (h *HmacDRBG) Generate(byteLength int32, input []byte) ([]byte, error) {
+	if h.reseedCounter > reseedInterval {
+		return nil, errors.New("Reseed is reqired")
+	}
+
 	if len(input) > 0 {
 		h.update(input)
 	}
