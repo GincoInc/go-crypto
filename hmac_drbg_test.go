@@ -17,9 +17,6 @@ func TestNewHmacDRBG(t *testing.T) {
 		So(hmacDRBG.k, ShouldResemble, k)
 		v, _ := hex.DecodeString("81e0d8830ed2d16f9b288a1cb289c5fab3f3c5c28131be7cafedcc7734604d34")
 		So(hmacDRBG.v, ShouldResemble, v)
-		So(hmacDRBG.entropy, ShouldResemble, entropy)
-		So(hmacDRBG.nonce, ShouldResemble, nonce)
-		So(hmacDRBG.pers, ShouldResemble, pers)
 		So(hmacDRBG.reseedCounter, ShouldEqual, 1)
 	})
 }

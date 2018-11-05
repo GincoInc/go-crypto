@@ -9,9 +9,6 @@ import (
 type HmacDRBG struct {
 	k             []byte
 	v             []byte
-	entropy       []byte
-	nonce         []byte
-	pers          []byte
 	reseedCounter int
 }
 
@@ -33,15 +30,11 @@ func NewHmacDRBG(entropy, nonce, pers []byte) *HmacDRBG {
 	h := &HmacDRBG{
 		k:             k,
 		v:             v,
-		entropy:       entropy,
-		nonce:         nonce,
-		pers:          pers,
 		reseedCounter: 0,
 	}
 
 	h.update(seed)
 	h.reseedCounter = 1
-	h.reset()
 
 	return h
 }
@@ -111,15 +104,4 @@ func (h *HmacDRBG) update(input []byte) {
 	h.v = mac.Sum(nil)
 
 	return
-}
-
-func (h *HmacDRBG) reset() {
-	resetBytes(h.entropy)
-	resetBytes(h.nonce)
-}
-
-func resetBytes(bytes []byte) {
-	for i := range bytes {
-		bytes[i] = 0x00
-	}
 }
